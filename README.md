@@ -9,10 +9,7 @@ Welcome to our group project repository! Here, we collaborate on various project
 
 Description: Briefly describe what this project is about.
 
-
-
-
-- **Colab Notebook**: [![Project 1 Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ZJVnnF9qbGUd8mU9kIvYHMivAzO83MzW?usp=sharing)
+- **[Project 1 Notebook]**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ZJVnnF9qbGUd8mU9kIvYHMivAzO83MzW?usp=sharing)
 
 ## Project 2: [Project Title]
 
