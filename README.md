@@ -20,6 +20,18 @@ Welcome to our group project repository! Here, we collaborate on various project
 
 - **[Project 1 Slides]**: [Slides](https://docs.google.com/presentation/d/1U3EmTjXoUij8sFbSxL47A_2-dvUX-xZlMLf4rQBUs40/edit?usp=sharing)
 
+- **[Assessment]**:
+  Great talk today! I thought you did a great job demonstrating the effects of normalization through multiple simulations. 
+
+  What worked great:
+  - The simulations were nicely done and highly effective in showing how the normalization function reduces redundancy, induces winner-take-all competition, and produces light adaptation in the retina.
+  - I like how you managed to go deeper into the math while keeping people focused on the big picture.
+  
+  Some advice for next time:
+  - Try focusing more on motivating the problem and illustrating the big picture. Ironically, it’s the simulations that take us the greatest time to create, but it’s the high-level descriptions that often stick with the audience. For example, why even care about normalization? How does this relate to the real world?
+  
+  Grade: A
+
 ## Project 2: [Project Title]
 
 Description: Briefly describe what this project is about.
