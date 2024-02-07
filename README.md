@@ -17,7 +17,7 @@ Description:
 References:
 Carandini, M. & Heeger, D.J. (2012). Normalization as a canonical neural operation. Nature Reviews Neuroscience, 13, 51-62.
 
-- **[Project 1 Notebook]**: [Notebook](https://deepnote.com/workspace/default-ae8c-cd19bf13-8f43-4da3-9f0c-aa16e4875ff5/project/PSY-1401-Group-2-3569eb68-a6a6-4122-9c3d-498e88f49235/notebook/Notebook%201-722cb16dd39448d58a75ce12268e6ff6)]
+- **[Project 1 Notebook]**: [Notebook](https://deepnote.com/workspace/default-ae8c-cd19bf13-8f43-4da3-9f0c-aa16e4875ff5/project/PSY-1401-Group-2-3569eb68-a6a6-4122-9c3d-498e88f49235/notebook/Notebook%201-722cb16dd39448d58a75ce12268e6ff6)
 
 ## Project 2: [Project Title]
 
