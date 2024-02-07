@@ -49,5 +49,11 @@ Description: Briefly describe what this project is about.
 
 For any queries or assistance, please reach out to the team members via our communication channels.
 
-Happy coding!
+- [Slack] (https://mit.enterprise.slack.com/archives/C06FNKK4MRD)
+
+- [Emails]
+  - Sol Markman: smarkman@MIT.EDU
+  - Hokyung Sung: hokyung@MIT.EDU
+  - Quilee Simeon: qsimeon@MIT.EDU
+  - Jack Gabel: gabel@MIT.EDU
 
