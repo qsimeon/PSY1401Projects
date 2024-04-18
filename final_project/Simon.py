@@ -4,11 +4,12 @@ import time
 import pygame
 from pygame.locals import *
 from datetime import datetime
-from absl import flags
+from absl import app, flags
 
 # Flags
 FLAGS = flags.FLAGS
 flags.DEFINE_boolean('log_data', True, 'Whether to log data.')
+flags.DEFINE_string('player_id', input('Enter a unique user ID: '), 'The ID of the player.')
 
 # Constants
 FPS = 30
@@ -52,7 +53,7 @@ def log_data(event, timestamp, score, log_file_name):
     with open(log_file_name, 'a') as log_file:
         log_file.write(f"{event},{timestamp},{score}\n")
 
-def main():
+def main(_):
     """
     The main game loop.
     """
@@ -87,7 +88,7 @@ def main():
     # Create log file
     if FLAGS.log_data:
         timestamp = datetime.now().strftime("%d_%H_%M")
-        log_file_name = f"simon_log_{timestamp}.csv"
+        log_file_name = f"simon_log_{FLAGS.player_id}_{timestamp}.csv"
         with open(log_file_name, 'w') as log_file:
             log_file.write("Event,Timestamp,Score\n")
 
@@ -294,4 +295,4 @@ def get_button_clicked(x, y):
     return None
 
 if __name__ == '__main__':
-    main()
+    app.run(main)
