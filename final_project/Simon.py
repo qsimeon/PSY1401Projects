@@ -4,6 +4,11 @@ import time
 import pygame
 from pygame.locals import *
 from datetime import datetime
+from absl import flags
+
+# Flags
+FLAGS = flags.FLAGS
+flags.DEFINE_boolean('log_data', True, 'Whether to log data.')
 
 # Constants
 FPS = 30
@@ -80,10 +85,11 @@ def main():
     bg_color = BLACK
 
     # Create log file
-    timestamp = datetime.now().strftime("%d_%H_%M")
-    log_file_name = f"simon_log_{timestamp}.csv"
-    with open(log_file_name, 'w') as log_file:
-        log_file.write("Event,Timestamp,Score\n")
+    if FLAGS.log_data:
+        timestamp = datetime.now().strftime("%d_%H_%M")
+        log_file_name = f"simon_log_{timestamp}.csv"
+        with open(log_file_name, 'w') as log_file:
+            log_file.write("Event,Timestamp,Score\n")
 
     # Game loop
     while True:
@@ -127,7 +133,8 @@ def main():
                 flash_button_animation(clicked_button)
                 color = get_button_color(clicked_button)
                 timestamp = time.time() - user_response_start_time
-                log_data(color, timestamp, score, log_file_name)
+                if FLAGS.log_data:
+                    log_data(color, timestamp, score, log_file_name)
                 current_step += 1
                 user_response_start_time = time.time()  # Reset the clock after each click
 
@@ -233,32 +240,6 @@ def draw_buttons():
     pygame.draw.rect(DISPLAY_SURF, BLUE, BLUE_RECT)
     pygame.draw.rect(DISPLAY_SURF, RED, RED_RECT)
     pygame.draw.rect(DISPLAY_SURF, GREEN, GREEN_RECT)
-
-def change_background_animation(animation_speed=40):
-    """
-    Changes the background color with an animation.
-    
-    Args:
-        animation_speed (int): The speed of the background color animation.
-    """
-    global bg_color
-    new_bg_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-    new_bg_surf = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
-    new_bg_surf = new_bg_surf.convert_alpha()
-    r, g, b = new_bg_color
-    for alpha in range(0, 255, animation_speed):  # animation loop
-        check_for_quit()
-        DISPLAY_SURF.fill(bg_color)
-
-        new_bg_surf.fill((r, g, b, alpha))
-        DISPLAY_SURF.blit(new_bg_surf, (0, 0))
-
-        draw_buttons()  # redraw the buttons on top of the tint
-
-        pygame.display.update()
-        FPS_CLOCK.tick(FPS)
-    bg_color = new_bg_color
 
 def game_over_animation(color=WHITE, animation_speed=50):
     """
