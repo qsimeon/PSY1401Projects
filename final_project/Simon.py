@@ -8,8 +8,10 @@ from absl import app, flags
 
 # Flags
 FLAGS = flags.FLAGS
-flags.DEFINE_boolean('log_data', True, 'Whether to log data.')
-flags.DEFINE_string('player_id', input('Enter a unique user ID: '), 'The ID of the player.')
+flags.DEFINE_boolean("log_data", True, "Whether to log data.")
+flags.DEFINE_string(
+    "player_id", input("Enter a unique user ID: "), "The ID of the player."
+)
 
 # Constants
 FPS = 30
@@ -36,22 +38,39 @@ DARK_GRAY = (40, 40, 40)
 
 # Button positions
 YELLOW_RECT = pygame.Rect(BUTTON_GAP_SIZE, BUTTON_GAP_SIZE, BUTTON_SIZE, BUTTON_SIZE)
-BLUE_RECT = pygame.Rect(BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE, BUTTON_GAP_SIZE, BUTTON_SIZE, BUTTON_SIZE)
-RED_RECT = pygame.Rect(BUTTON_GAP_SIZE, BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE, BUTTON_SIZE, BUTTON_SIZE)
-GREEN_RECT = pygame.Rect(BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE, BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE, BUTTON_SIZE, BUTTON_SIZE)
+BLUE_RECT = pygame.Rect(
+    BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE,
+    BUTTON_GAP_SIZE,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
+)
+RED_RECT = pygame.Rect(
+    BUTTON_GAP_SIZE,
+    BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
+)
+GREEN_RECT = pygame.Rect(
+    BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE,
+    BUTTON_GAP_SIZE + BUTTON_SIZE + BUTTON_GAP_SIZE,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
+)
+
 
 def log_data(event, timestamp, score, log_file_name):
     """
     Logs game data to a CSV file.
-    
+
     Args:
         event (str): The event to log (e.g., button color).
         timestamp (float): The timestamp of the event.
         score (int): The current score.
         log_file_name (str): The name of the log file.
     """
-    with open(log_file_name, 'a') as log_file:
+    with open(log_file_name, "a") as log_file:
         log_file.write(f"{event},{timestamp},{score}\n")
+
 
 def main(_):
     """
@@ -62,19 +81,23 @@ def main(_):
     pygame.init()
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption('Simulate')
+    pygame.display.set_caption("Simulate")
 
-    BASIC_FONT = pygame.font.Font('freesansbold.ttf', 16)
+    BASIC_FONT = pygame.font.Font("freesansbold.ttf", 16)
 
-    info_surf = BASIC_FONT.render('Match the pattern by clicking on the button or using the Q, W, A, S keys.', True, WHITE)
+    info_surf = BASIC_FONT.render(
+        "Match the pattern by clicking on the button or using the Q, W, A, S keys.",
+        True,
+        WHITE,
+    )
     info_rect = info_surf.get_rect()
     info_rect.topleft = (10, WINDOW_HEIGHT - 25)
 
     # Load sound files
-    BEEP1 = pygame.mixer.Sound('beep1.ogg')
-    BEEP2 = pygame.mixer.Sound('beep2.ogg')
-    BEEP3 = pygame.mixer.Sound('beep3.ogg')
-    BEEP4 = pygame.mixer.Sound('beep4.ogg')
+    BEEP1 = pygame.mixer.Sound("beep1.ogg")
+    BEEP2 = pygame.mixer.Sound("beep2.ogg")
+    BEEP3 = pygame.mixer.Sound("beep3.ogg")
+    BEEP4 = pygame.mixer.Sound("beep4.ogg")
 
     # Initialize game variables
     pattern = []
@@ -89,7 +112,7 @@ def main(_):
     if FLAGS.log_data:
         timestamp = datetime.now().strftime("%d_%H_%M")
         log_file_name = f"simon_log_{FLAGS.player_id}_{timestamp}.csv"
-        with open(log_file_name, 'w') as log_file:
+        with open(log_file_name, "w") as log_file:
             log_file.write("Event,Timestamp,Score\n")
 
     # Game loop
@@ -98,7 +121,7 @@ def main(_):
         DISPLAY_SURF.fill(bg_color)
         draw_buttons()
 
-        score_surf = BASIC_FONT.render('Score: ' + str(score), True, WHITE)
+        score_surf = BASIC_FONT.render("Score: " + str(score), True, WHITE)
         score_rect = score_surf.get_rect()
         score_rect.topleft = (WINDOW_WIDTH - 100, 10)
         DISPLAY_SURF.blit(score_surf, score_rect)
@@ -128,7 +151,9 @@ def main(_):
                 flash_button_animation(button)
                 pygame.time.wait(FLASH_DELAY)
             waiting_for_input = True
-            user_response_start_time = time.time()  # Start the clock for the first click
+            user_response_start_time = (
+                time.time()
+            )  # Start the clock for the first click
         else:
             if clicked_button and clicked_button == pattern[current_step]:
                 flash_button_animation(clicked_button)
@@ -137,14 +162,18 @@ def main(_):
                 if FLAGS.log_data:
                     log_data(color, timestamp, score, log_file_name)
                 current_step += 1
-                user_response_start_time = time.time()  # Reset the clock after each click
+                user_response_start_time = (
+                    time.time()
+                )  # Reset the clock after each click
 
                 if current_step == len(pattern):
                     score += 1
                     waiting_for_input = False
                     current_step = 0
 
-            elif (clicked_button and clicked_button != pattern[current_step]) or (current_step != 0 and time.time() - TIMEOUT > user_response_start_time):
+            elif (clicked_button and clicked_button != pattern[current_step]) or (
+                current_step != 0 and time.time() - TIMEOUT > user_response_start_time
+            ):
                 game_over_animation()
                 pattern = []
                 current_step = 0
@@ -155,13 +184,14 @@ def main(_):
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
 
+
 def get_button_color(button):
     """
     Returns the color name of the given button.
-    
+
     Args:
         button (pygame.Rect): The button rectangle.
-        
+
     Returns:
         str: The color name of the button.
     """
@@ -175,12 +205,14 @@ def get_button_color(button):
         return "green"
     return None
 
+
 def terminate():
     """
     Terminates the game.
     """
     pygame.quit()
     sys.exit()
+
 
 def check_for_quit():
     """
@@ -193,10 +225,11 @@ def check_for_quit():
             terminate()
         pygame.event.post(event)
 
+
 def flash_button_animation(color, animation_speed=50):
     """
     Flashes a button with the given color.
-    
+
     Args:
         color (tuple): The color of the button to flash.
         animation_speed (int): The speed of the flashing animation.
@@ -233,6 +266,7 @@ def flash_button_animation(color, animation_speed=50):
             FPS_CLOCK.tick(FPS)
     DISPLAY_SURF.blit(orig_surf, (0, 0))
 
+
 def draw_buttons():
     """
     Draws the buttons on the screen.
@@ -242,10 +276,11 @@ def draw_buttons():
     pygame.draw.rect(DISPLAY_SURF, RED, RED_RECT)
     pygame.draw.rect(DISPLAY_SURF, GREEN, GREEN_RECT)
 
+
 def game_over_animation(color=WHITE, animation_speed=50):
     """
     Plays the game over animation.
-    
+
     Args:
         color (tuple): The color of the animation.
         animation_speed (int): The speed of the animation.
@@ -273,14 +308,15 @@ def game_over_animation(color=WHITE, animation_speed=50):
                 pygame.display.update()
                 FPS_CLOCK.tick(FPS)
 
+
 def get_button_clicked(x, y):
     """
     Returns the button that was clicked based on the mouse coordinates.
-    
+
     Args:
         x (int): The x-coordinate of the mouse click.
         y (int): The y-coordinate of the mouse click.
-        
+
     Returns:
         pygame.Rect: The button that was clicked, or None if no button was clicked.
     """
@@ -294,5 +330,6 @@ def get_button_clicked(x, y):
         return GREEN
     return None
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(main)
