@@ -58,7 +58,7 @@ GREEN_RECT = pygame.Rect(
 )
 
 
-def log_data(event, timestamp, score, log_file_name):
+def log_data(event, timestamp, score, log_file_name, correct):
     """
     Logs game data to a CSV file.
 
@@ -69,7 +69,7 @@ def log_data(event, timestamp, score, log_file_name):
         log_file_name (str): The name of the log file.
     """
     with open(log_file_name, "a") as log_file:
-        log_file.write(f"{event},{timestamp},{score}\n")
+        log_file.write(f"{event},{timestamp},{score},{correct}\n")
 
 
 def main(_):
@@ -113,7 +113,7 @@ def main(_):
         timestamp = datetime.now().strftime("%d_%H_%M")
         log_file_name = f"simon_log_{FLAGS.player_id}_{timestamp}.csv"
         with open(log_file_name, "w") as log_file:
-            log_file.write("Event,Timestamp,Score\n")
+            log_file.write("Event,Timestamp,Score,Correct\n")
 
     # Game loop
     while True:
@@ -160,7 +160,7 @@ def main(_):
                 color = get_button_color(clicked_button)
                 timestamp = time.time() - user_response_start_time
                 if FLAGS.log_data:
-                    log_data(color, timestamp, score, log_file_name)
+                    log_data(color, timestamp, score, log_file_name, True)
                 current_step += 1
                 user_response_start_time = (
                     time.time()
@@ -175,6 +175,10 @@ def main(_):
                 current_step != 0 and time.time() - TIMEOUT > user_response_start_time
             ):
                 game_over_animation()
+                color = get_button_color(clicked_button)
+                timestamp = time.time() - user_response_start_time
+                if FLAGS.log_data:
+                    log_data(color, timestamp, score, log_file_name, False)
                 pattern = []
                 current_step = 0
                 waiting_for_input = False
