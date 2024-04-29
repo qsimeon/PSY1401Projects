@@ -12,6 +12,7 @@ flags.DEFINE_boolean("log_data", True, "Whether to log data.")
 flags.DEFINE_string(
     "player_id", input("Enter a unique user ID: "), "The ID of the player."
 )
+flags.DEFINE_integer('start_idx', 0, 'The index of the sequence to start from.')
 
 # Constants
 FPS = 30
@@ -36,6 +37,21 @@ BRIGHT_YELLOW = (255, 255, 0)
 YELLOW = (155, 155, 0)
 DARK_GRAY = (40, 40, 40)
 
+# All predefined sequences
+cluster_seqs = ['RRGRRGRRYGGGRYYBGYYY', 'RBRRGBGYRYRYGYGYBRBR', 'RYGRGRBRYYBGYBYBYBYG', 
+                'GBBYBBBBYGRRGRRGRRGR', 'YBGRGBRBYBYBYGYGYBBB', 'BGBBYBGYRGYBGBYYRRGR', 
+                'YBYGBRYGGRRYGRBRBGYG', 'GYBGBGYYRGRYYGRYRGGG', 'GYRRYYYGYBGRRRGBYYRR', 
+                'RGYYYYYYBRBYRYRBRBYR']
+
+PCA_seqs = ['YGGBGGYBGBGYBGYGBGBB', 'RBGGRBGGBRYRYRYRBYRB', 'RGGRRYRYRBRBRGRBRRGG', 
+            'YBBYBYBGYBRYBGBRYGBR', 'BYRYRGGBGGRYRGYGGRYR', 'BRRYRRYGGGGRGGRGGBGB', 
+            'GRRRRYRRYRRGYBRGYRBR', 'BBRGYBGYGRRRBYRBBBBR', 'GYBGBGBGBGBYYRGBGYGB', 
+            'BYYRYRYRYRYGRYYRGRYR']
+
+all_sequences = []
+for seq in cluster_seqs + PCA_seqs:
+    all_sequences.append([RED if x=='R' else GREEN if x=='G' else BLUE if x=='B' else YELLOW for x in seq])
+
 # Button positions
 YELLOW_RECT = pygame.Rect(BUTTON_GAP_SIZE, BUTTON_GAP_SIZE, BUTTON_SIZE, BUTTON_SIZE)
 BLUE_RECT = pygame.Rect(
@@ -58,7 +74,7 @@ GREEN_RECT = pygame.Rect(
 )
 
 
-def log_data(event, timestamp, score, log_file_name, correct):
+def log_data(log_file_name, event, timestamp, score, correct):
     """
     Logs game data to a CSV file.
 
@@ -134,14 +150,8 @@ def main(_):
         with open(log_file_name, "w") as log_file:
             log_file.write("Event,Timestamp,Score,Correct\n")
     
-    #ENTER SEQUENCES HERE
-    all_sequences = [
-        [BLUE,RED,YELLOW],
-        [RED, RED],
-        [YELLOW, YELLOW],
-        [BLUE, BLUE]
-    ]
-    sequence_index = 0  # To track which sequence is currently active
+    # Initialize indices to track which sequence is currently active
+    sequence_index = FLAGS.start_idx
     pattern_index = 0
 
     # Game loop
@@ -167,7 +177,8 @@ def main(_):
                     color = get_button_color(clicked_button)
                     timestamp = time.time() - user_response_start_time
                     if FLAGS.log_data:
-                        log_data(color, timestamp, score, log_file_name, clicked_button == pattern[current_step])
+                        correct = clicked_button == pattern[current_step]
+                        log_data(log_file_name, color, timestamp, score, correct)
             elif event.type == KEYDOWN:
                 if event.key == K_q:
                     clicked_button = YELLOW
@@ -181,7 +192,8 @@ def main(_):
                     color = get_button_color(clicked_button)
                     timestamp = time.time() - user_response_start_time
                     if FLAGS.log_data:
-                        log_data(color, timestamp, score, log_file_name, clicked_button == pattern[current_step])
+                        correct = clicked_button == pattern[current_step]
+                        log_data(log_file_name, color, timestamp, score, correct)
 
         if not waiting_for_input:
             pygame.display.update()
