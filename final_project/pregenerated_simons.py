@@ -147,7 +147,7 @@ def main(_):
     # Create log file
     if FLAGS.log_data:
         timestamp = datetime.now().strftime("%d_%H_%M")
-        log_file_name = f"simon_{seq_name}_{FLAGS.player_id}_{timestamp}.csv"
+        log_file_name = f"simon_mouse_{seq_name}_{FLAGS.player_id}_{timestamp}.csv"
         with open(log_file_name, "w") as log_file:
             log_file.write("Sequence,Event,Timestamp,Score,Correct\n")
     
