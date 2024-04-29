@@ -86,7 +86,7 @@ def main(_):
     BASIC_FONT = pygame.font.Font("freesansbold.ttf", 16)
 
     info_surf = BASIC_FONT.render(
-        "Match the pattern by clicking on the button or using the Q, W, A, S keys.",
+        "Match the pattern by clicking on the button.",
         True,
         WHITE,
     )
@@ -133,15 +133,6 @@ def main(_):
             if event.type == MOUSEBUTTONUP:
                 mouse_x, mouse_y = event.pos
                 clicked_button = get_button_clicked(mouse_x, mouse_y)
-            elif event.type == KEYDOWN:
-                if event.key == K_q:
-                    clicked_button = YELLOW
-                elif event.key == K_w:
-                    clicked_button = BLUE
-                elif event.key == K_a:
-                    clicked_button = RED
-                elif event.key == K_s:
-                    clicked_button = GREEN
 
         if not waiting_for_input:
             pygame.display.update()
