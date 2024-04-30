@@ -156,7 +156,7 @@ def parse_simon_game_csv(filepath):
     game_results = dict()
     for data in subdataframes:
         # Get the longest chain the player was able to reproduce
-        # and the chain they made when the made a mistake.
+        # and the chain they made when they made a mistake.
         best_and_last = data[data.Score >= max(data.Score) - 1]
         # print(best_and_last)
         longest_sequence = "".join(
