@@ -198,22 +198,22 @@ def parse_simons_game_logs(directory):
 
 # ------------------------------------------------------
 
-def generate_random_sequence(length=30, max=False):
+def generate_random_sequence(length=30, min=None):
     '''
     Generates a random sequence of a specified length.
     '''
-    sz = np.random.randint(1, length+1) if max else length
+    sz = np.random.randint(min, length+1) if min is not None else length
 
     sequence = "".join(
         np.random.choice(["B", "G", "R", "Y"], size=sz)
     )
     return sequence
 
-def sample_random_sequences(length=30, num_samples=1000, max=False):
+def sample_random_sequences(length=30, num_samples=1000, min=None):
     '''
     Generates a list of random sequences.
     '''
-    return [generate_random_sequence(length=length, max=max) for _ in range(num_samples)]
+    return [generate_random_sequence(length=length, min=min) for _ in range(num_samples)]
 
 def sample_compressed_lengths(scheme, length, num_samples=1000):
 
