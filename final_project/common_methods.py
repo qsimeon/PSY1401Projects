@@ -66,12 +66,34 @@ def complex_repeat_scheme(seq):
     '''
     return repeat_chunking(seq, single_only=False)
 
+def repeat_alternation_scheme(seq):
+    seq_r = complex_repeat_scheme(seq)[1]
+    result = []
+    i = 0
+    while i < len(seq_r):
+        if seq_r[i] == '[':
+            j = i
+            while seq_r[j] != ']':
+                j += 1
+            result.append(seq_r[i:j+1])
+            i = j + 1
+        else:
+            if i+2 < len(seq_r) and seq_r[i] == seq_r[i+2]:
+                result.append(f'[{seq_r[i:i+2]}*]')
+                i += 3
+            else:
+                result.append(seq_r[i])
+                i += 1
+    code = ''.join(result)
+    code_len = len(code.replace('[', '').replace(']', '').replace('*', ''))
+    return code_len, code
+
 def test_coding_scheme(scheme, sequences, answers):
     for i in range(len(sequences)):
         s_idx = i
         sequence = sequences[s_idx]
         print(sequence, answers[s_idx])
-        print(scheme(sequence))
+        print(scheme(sequence)[1], scheme(sequence)[0])
         if scheme(sequence)[0] != answers[s_idx]:
             print('^ERROR')
 
