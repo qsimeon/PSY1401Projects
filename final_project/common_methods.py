@@ -88,13 +88,50 @@ def repeat_alternation_scheme(seq):
     code_len = len(code.replace('[', '').replace(']', '').replace('*', ''))
     return code_len, code
 
+def cycle_rep_alt_scheme(seq, weight_dirs=1):
+    result = []
+    i = 0
+    CW = ''.join(np.tile('YBGR', len(seq)//4 + 1))
+    CCW = ''.join(np.tile('RGBY', len(seq)//4 + 1))
+    while i < len(seq):
+        if seq[i] == '[':
+            j = i
+            while seq[j] != ']':
+                j += 1
+            result.append(seq[i:j+1])
+            i = j + 1
+        else:
+            if i + 3 < len(seq) and seq[i:i+3] in CW:
+                j = i + 3
+                while j < len(seq) and seq[i:j+1] in CW:
+                    j += 1
+                result.append(f'[{seq[i]}{j-i}+]')
+                i = j
+            elif i + 3 < len(seq) and seq[i:i+3] in CCW:
+                j = i + 3
+                while j < len(seq) and seq[i:j+1] in CCW:
+                    j += 1
+                result.append(f'[{seq[i]}{j-i}-]')
+                i = j
+            else:
+                result.append(seq[i])
+                i += 1
+    
+    seq_c = ''.join(result)
+    code = repeat_alternation_scheme(seq_c)[1]
+    dir_count = code.count('+') + code.count('-')
+    code_len = len(code.replace('[', '').replace(']', '').replace('*', '')) \
+                + (weight_dirs - 1)*dir_count
+    return code_len, code
+
 def test_coding_scheme(scheme, sequences, answers):
     for i in range(len(sequences)):
         s_idx = i
         sequence = sequences[s_idx]
         print(sequence, answers[s_idx])
-        print(scheme(sequence)[1], scheme(sequence)[0])
-        if scheme(sequence)[0] != answers[s_idx]:
+        code_len, code = scheme(sequence)
+        print(code, code_len)
+        if code_len != answers[s_idx]:
             print('^ERROR')
 
 # ----- Methods adapted from LempelZivScheme.ipynb -----
