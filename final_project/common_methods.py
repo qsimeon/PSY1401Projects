@@ -330,7 +330,7 @@ default_scheme_keys = ['Lempel-Ziv Complexity', 'SimpleRepeats', 'Alternations',
 np.random.seed(124)
 default_lookup_table = dict()
 for i, key in enumerate(default_scheme_keys):
-    for l in range(5, 31):
+    for l in range(2, 50):
         default_lookup_table[key + ' ' + str(l)] =  \
             sample_compressed_lengths(default_schemes[i], l, 1000)
 
