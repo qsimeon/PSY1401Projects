@@ -5,6 +5,7 @@ can more easily be exported to other files.
 import os
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 # Repeat chunking for single + optionally multicolor and nested repeats
 def find_repeats(seq, length): 
@@ -66,8 +67,11 @@ def complex_repeat_scheme(seq):
     '''
     return repeat_chunking(seq, single_only=False)
 
-def repeat_alternation_scheme(seq):
-    seq_r = complex_repeat_scheme(seq)[1]
+def alternation_scheme(seq, preceding_scheme=None):
+    if preceding_scheme is not None:
+        seq_r = preceding_scheme(seq)[1]
+    else:
+        seq_r = seq
     result = []
     i = 0
     while i < len(seq_r):
@@ -88,7 +92,13 @@ def repeat_alternation_scheme(seq):
     code_len = len(code.replace('[', '').replace(']', '').replace('*', ''))
     return code_len, code
 
-def cycle_rep_alt_scheme(seq, weight_dirs=1):
+def complexrepeat_alternation_scheme(seq):
+    '''
+    Complex repeats first, then alternations.
+    '''
+    return alternation_scheme(seq, preceding_scheme=complex_repeat_scheme)
+
+def cycle_scheme(seq, weight_dirs=0.5, following_scheme=None):
     result = []
     i = 0
     CW = ''.join(np.tile('YBGR', len(seq)//4 + 1))
@@ -118,11 +128,26 @@ def cycle_rep_alt_scheme(seq, weight_dirs=1):
                 i += 1
     
     seq_c = ''.join(result)
-    code = repeat_alternation_scheme(seq_c)[1]
+    if following_scheme is not None:
+        code = following_scheme(seq_c)[1]
+    else:
+        code = seq_c
     dir_count = code.count('+') + code.count('-')
     code_len = len(code.replace('[', '').replace(']', '').replace('*', '')) \
                 + (weight_dirs - 1)*dir_count
     return code_len, code
+
+def cycle_rep_scheme(seq, weight_dirs=0.5):
+    '''
+    Cycles, complex repeats.
+    '''
+    return cycle_scheme(seq, weight_dirs, following_scheme=complex_repeat_scheme)
+
+def cycle_rep_alt_scheme(seq, weight_dirs=0.5):
+    '''
+    Cycles, complex repeats, alternations.
+    '''
+    return cycle_scheme(seq, weight_dirs, following_scheme=complexrepeat_alternation_scheme)
 
 def test_coding_scheme(scheme, sequences, answers):
     for i in range(len(sequences)):
@@ -282,3 +307,87 @@ def sample_compressed_lengths(scheme, length, num_samples=1000):
         compressed_lengths.append(scheme(sequence)[0])
 
     return np.array(compressed_lengths)
+
+# ----- Methods for analysis -----
+
+def get_code_lengths(scheme, seq):
+    return scheme(seq)[0]
+
+def get_chunkability_simple(scheme, seq):
+
+    l = get_code_lengths(scheme, seq)
+    chunkability = 1 - l/len(seq)
+    return chunkability
+
+default_schemes = [LZ_scheme, simple_repeat_scheme, alternation_scheme, 
+                   complex_repeat_scheme, cycle_scheme,
+                   #cycle_rep_alt_scheme
+                   ]
+default_scheme_keys = ['Lempel-Ziv Complexity', 'SimpleRepeats', 'Alternations', 
+                       'ComplexRepeats', 'Cycles', 
+                       #'Cycles-ComplexRepeats-Alternations'
+                       ]
+np.random.seed(124)
+default_lookup_table = dict()
+for i, key in enumerate(default_scheme_keys):
+    for l in range(5, 31):
+        default_lookup_table[key + ' ' + str(l)] =  \
+            sample_compressed_lengths(default_schemes[i], l, 1000)
+
+def get_chunkability_percentile(scheme, seq, n_samples=1000):
+    if scheme in default_schemes:
+        key = default_scheme_keys[default_schemes.index(scheme)]
+        cl_samples = default_lookup_table[key + ' ' + str(len(seq))]
+    else:
+        cl_samples = sample_compressed_lengths(scheme, len(seq), n_samples)
+    cl_datapt = get_code_lengths(scheme, seq)
+    cl_percentile = stats.percentileofscore(cl_samples, cl_datapt, kind='mean')
+    chunkability = (50 - cl_percentile) # should positive if the compression length is less than the median
+
+    return chunkability
+
+def get_default_schemes():
+    return default_schemes
+
+def get_default_scheme_keys():
+    return default_scheme_keys
+
+def get_chunkabilities_from_logs(data_path, schemes=default_schemes, 
+                                 scheme_keys=default_scheme_keys, 
+                                 get_chunkability=get_chunkability_percentile):
+    
+    session_data = parse_simons_game_logs(data_path)
+    N_games = 0
+    scores = []
+    sequences = []
+
+    for i, key in enumerate(session_data.keys()):
+        N_games += len(session_data[key])
+        for game in session_data[key].values():
+            sequences.append(game['longest_sequence'])
+            scores.append(len(game['longest_sequence']))
+    
+    results = dict(scores=scores, sequences=sequences)
+    if get_chunkability is None:
+        return results
+
+    # Compute chunkabilities for each sequence
+    for s, scheme_key in enumerate(scheme_keys):
+        scheme = schemes[s]
+        results[scheme_key] = []
+        for seq in sequences:
+            if len(seq) < 2:
+                results[scheme_key].append(0)
+                continue
+            results[scheme_key].append(get_chunkability(scheme, seq))
+
+    return results
+
+def get_measure_multiple_seqs(scheme, random_sequences, get_measure=get_code_lengths):
+    
+    measures = []
+    for i in range(len(random_sequences)):
+        seq = random_sequences[i]
+        measures.append(get_measure(scheme, seq))
+        
+    return np.array(measures)
