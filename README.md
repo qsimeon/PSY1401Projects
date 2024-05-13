@@ -33,7 +33,7 @@ For any queries or assistance, please reach out to the team members via our comm
 5) Discuss the possible biological mechanisms that could give rise to normalization.
 
 #### References: 
-Carandini, M. & Heeger, D.J. (2012). Normalization as a canonical neural operation. Nature Reviews Neuroscience, 13, 51-62.
+* Carandini, M. & Heeger, D.J. (2012). Normalization as a canonical neural operation. Nature Reviews Neuroscience, 13, 51-62.
 
 #### Files:
 - [Project 1 Notebook](https://deepnote.com/workspace/default-ae8c-cd19bf13-8f43-4da3-9f0c-aa16e4875ff5/project/PSY-1401-Group-2-3569eb68-a6a6-4122-9c3d-498e88f49235/notebook/Notebook%201-722cb16dd39448d58a75ce12268e6ff6)
@@ -169,15 +169,15 @@ The Simon game is a popular toy that involves learning a sequence of colors. The
 - [Final Project Report](https://docs.google.com/document/d/19QjyL0h_vO2xfzWEqLngsa-ylBaJN68nlAArLXN3e1U/edit?usp=sharing)
 
 #### Assessment:
-Thank you for submitting your final project report. You started by motivating the project, explaining why the Simon Game was interesting, and then proposed the chunking hypothesis and reviewed relevant evidence for chunking. Behaviorally, you came up with five coding schemes and tested them in human subjects. Neurally, you formulated three models and simulated them, as hypotheses of what’s going on inside people’s brains when they memorize long sequences.
+Thank you for submitting your final project report. Great work, and thanks for an amazing semester!
+
+You started by motivating the project, explaining why the Simon Game was interesting, and then proposed the chunking hypothesis and reviewed relevant evidence for chunking. Behaviorally, you came up with five coding schemes and tested them in human subjects. Neurally, you formulated three models and simulated them, as hypotheses of what’s going on inside people’s brains when they memorize long sequences.
 
 Overall, this work is awesome! I think the topic is interesting, the writing and technical details were clear, and there was a lot of thinking involved - I liked how you explained your choices of tasks, models, even the normalization in defining chunkability, listing what you tried, why things worked/didn’t work, and how you landed on the final decisions.
 
 I especially liked your idea of chunking being implemented through the firing rates of neurons, where firing rates scale with the number of repeats. This is clever! I also liked the idea of encoding and updating contexts in the CC-STSP model. For the temporal model, my read is that it assumes that four colors need to be looped through before returning to a color that occurred before. Is that right? Because then it wouldn’t be able to apply to sequences like R[3]GBRY where a color (R) shows up a second time after some other colors are shown but before all colors are shown.
 
 The discussions of your results, limitations, and future directions are great. One thing, though, is I think “This work argues that chunking explains our surprisingly lengthy Simon sequences” is a strong conclusion. I did not take your results to mean that chunking explains how people remember long sequences; rather, there seem to be at most some correlations between longer sequences remembered and the chunkability according to a couple, but not all of the coding schemes you tested. There also seems to be a lot of variability across individuals (Figure 10). That said, this is a really nice paper and I enjoyed reading it!
-
-Great work, and thanks for an amazing semester!
 
 **Grade:** A
 
